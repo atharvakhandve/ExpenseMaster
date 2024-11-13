@@ -56,14 +56,16 @@ const userCtrl = {
     //Profile
     profile: asynchandler(async (req, res) => {
         // Convert req.user to ObjectId if it's a string (proper conversion)
-        const userId = req.body.user;
+        const user = req.query.user;
 
-        console.log("userId: " + userId);
+        console.log("user is => " + JSON.stringify(req.body));
+
+        console.log("userId: " + user);
 
         // Fetch the user by ObjectId and exclude the password field
-        const user = await User.findById(userId).select("-password");
+        const userFound = await User.findById(user).select("-password");
 
-        if (!user) {
+        if (!userFound) {
             return res.status(404).json({ message: "User not found" });
         }
 
@@ -71,7 +73,7 @@ const userCtrl = {
 
         response["MonthwiseTransactions"] = req.body.monthwiseTransactions;
         response["TopCategories"] = req.body.TopCategories;
-        response["UserData"] = user
+        response["UserData"] = userFound
 
         res.json({ response });
     }),

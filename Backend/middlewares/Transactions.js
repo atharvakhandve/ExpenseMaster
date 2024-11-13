@@ -12,11 +12,11 @@ const TransactionsCtrl = {
     },
     getMonthwiseUserExpends: async(req, res, next) => {
         //var transactionsQuery = [];
-        const {user} = req.body;
+        console.log("user is => " + JSON.stringify(req.body));
+        const user = req.query.user;
         const currYear = new Date().getFullYear()
         const startDate = new Date(currYear, -1, 1);
         const endDate = new Date(currYear, 11, 1);
-
         const query = {
             date:{
                 $gte: startDate,
@@ -27,7 +27,7 @@ const TransactionsCtrl = {
         }
 
         console.log("USER IS: " + new mongoose.Types.ObjectId(user));
-
+        req.body.user = user;
         //const testQuery = await IndividualTransactions.find({
         //    user: user,
         //    includedMember: user
@@ -64,8 +64,9 @@ const TransactionsCtrl = {
           next();
     },
     getTopCategryExpends: async(req, res, next) => {
-        const {user} = req.body;
-
+        console.log("user is => " + JSON.stringify(req.body));
+        const user = req.query.user;
+        req.body.userId = user;
         const transactions = await IndividualTransactions.aggregate([
             {
               $match: {includedMember: new mongoose.Types.ObjectId(user)} // Filter transactions by user ID
