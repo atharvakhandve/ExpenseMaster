@@ -1,10 +1,11 @@
 import React from "react";
-import '../LoginForm/LoginSignUp.css'
+import '../LoginForm/LoginSignup.css'
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { useState } from "react";
-import email_icon from '../images/email.png'
-import password_icon from '../images/password.png'
+import logo from '../images/logo.png'
+import Cookies from 'js-cookie';
+
 
 function Login(){
 
@@ -17,34 +18,72 @@ function Login(){
 
 
 
-  const handleSubmit=(e)=>{
-      e.preventDefault()
-      axios.post('http://localhost:3000/api/users/register',{email, password, username})
-      .then(result=>{console.log(result)}).catch(err=>console.log(err))
-
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    // Send login request with email and password
+    axios
+      .post('http://localhost:3000/api/users/login', { email, password })
+      .then((result) => {
+        if (result.data['email']) {
+          const userId = result.data.id;
+          const username = result.data.username;
+  
+          // Store user session data in cookies
+          Cookies.set('userId', userId, { expires: 7 });  // Cookie expires in 7 days
+          Cookies.set('username', username, { expires: 7 });
+  
+          // Send another request to fetch the user's profile using userId
+          return axios.get('http://localhost:3000/api/users/profile', {
+            params: { user: userId }, // Pass userId as a param
+          });
+        } else {
+          throw new Error('Invalid Credentials');
+        }
+      })
+      .then((profileResult) => {
+        // Log profile data
+        console.log(profileResult);
+        
+        // After successful login and profile fetch, navigate to the dashboard
+        navigate('/home');
+      })
+      .catch((err) => {
+        console.log('Error:', err.message);
+      });
+  };
 
   return(
-      <div className="container">
-          <div class="navbar">
-            <div className="">
+      <div>
+          <div className="navbar">
+            <div className="nav-links">
               <a href="">About Us</a>
-              <a href="">Log In</a>
+              <Link to='/register'>Sign Up</Link>
             </div>    
           </div>
-          <div class="container">
-              <div class="div1">
-                  <img src="../../Downloads/Screenshot_2024-11-07_213624-removebg.png" alt=""/>
+          <div className="container">
+              <div className="div1">
+                  <img src={logo} alt=""/>
               </div>
-              <div class="div2">
-                  <div class="login">
-                      <h2>Signup</h2>
+              <div className="div2">
+                  <div className="login">
+                      <h2>{action}</h2>
                       <form onSubmit={handleSubmit}>
-                          <input class="field" type="text" name="username" placeholder="Enter your username here" onChange={(e) =>setUsername(e.target.value)}/>
-                          <input class="field" type="email" name="email" placeholder="Enter your email here" onChange={(e) =>setEmail(e.target.value)}/>
-                          <input class="field" type="password" name="password" placeholder="Enter your password here" onChange={(e) =>setPassword(e.target.value)}/>
-                          <input class="field" type="password" placeholder="Confirm password"/>
-                          <input class="button" type="submit" value="Signup"/>
+                          <input className="field" 
+                                 type="email" 
+                                 name="email" 
+                                 placeholder="Enter your email here" 
+                                 onChange={(e) =>setEmail(e.target.value)}/>
+                          <input 
+                                className="field" 
+                                type="password" 
+                                name="password" 
+                                placeholder="Enter your password here" 
+                                onChange={(e) =>setPassword(e.target.value)}/>
+                          <input 
+                                className="button" 
+                                type="submit" 
+                                value="Login"/>
                       </form>
                   </div>
               </div>
