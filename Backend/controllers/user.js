@@ -8,6 +8,7 @@ const Groups = require('../models/Groups');
 const Transactions = require('../models/Transactions');
 const GroupTransactions = require('../models/GroupTransactions');
 const TransactionCategories = require('../models/TransactionCategories');
+const CategorySpends = require('../models/CategorySpends');
 
 const userCtrl = {
     //Register
@@ -176,6 +177,11 @@ const userCtrl = {
                    category: "672d5bbe4bf361c92b4557ee"
                 })
                 //await session.commitTransaction();
+                await CategorySpends.findOneAndUpdate(
+                    {user: userId, category: "672d5bbe4bf361c92b4557ee"},
+                    {$inc: {totalAmountSpent: members[userId]}},
+                    {upsert: true}
+                );
                 populatedTransaction = await groupTransaction.populate([{path: 'includedMembers', populate: {path: 'user includedMember', select:'username email'}}, 'group']);
                 req.body.group = populatedTransaction.group;
                 next();
