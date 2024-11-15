@@ -73,6 +73,7 @@ function Header({OpenSidebar}) {
         </div>
         <div className='header-left'>
             <h1>Hello, {username}</h1>
+            <h1>Hello, {username}</h1>
         </div>
         <div className='header-right'>
             <BsFillBellFill button className='icon'/>

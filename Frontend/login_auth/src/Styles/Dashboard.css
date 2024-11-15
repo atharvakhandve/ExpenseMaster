@@ -230,7 +230,28 @@
   }
 }*/
 
+.span1{
+  display: inline;
+  color: #88975e;
+}
 
+.span2{
+  color:#3F4B3F;
+}
+
+.span3{
+  display: inline;
+  color: green;
+}
+
+.Welcome {
+  display: flex;
+  background-color: #88975e;
+  justify-content: center;
+  align-items: center;
+  font-size: 60px;
+  margin-bottom: 10px;
+}
 
 /* home section 1 buttons */
 .btn{
