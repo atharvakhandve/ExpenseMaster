@@ -1,6 +1,6 @@
 
 .menu{
-  color:#124e66;
+  color: #2a382a;
 }
 
 .icon {
@@ -38,82 +38,6 @@
   height: 100vh;
 }
 
-/* Header  */
-.header {
-  grid-area: header;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px 0 30px;
-  box-shadow: 0 6px 7px -3px rgba(0, 0, 0, 0.35);
-}
-
-.menu-icon {
-  display: none;
-}
-/* End Header  */
-
-/* Sidebar  */
-#sidebar {
-  grid-area: sidebar;
-  height: 100%;
-  background-color: #d3d9d4;
-  overflow-y: auto;
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-}
-
-.sidebar-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px 0px 30px;
-  margin-bottom: 30px;
-}
-
-.sidebar-title > span {
-  display: none;
-}
-
-.sidebar-brand {
-  margin-top: 15px;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.sidebar-list {
-  padding: 0;
-  list-style-type: none;
-}
-
-.sidebar-list-item {
-  padding: 30px 30px 30px 30px;
-  font-size: 18px;
-}
-
-.sidebar-list-item:hover {
-  background-color: #748d92;
-  cursor: pointer;
-}
-
-.sidebar-list-item > a {
-  text-decoration: none;
-  color: #124e66;
-}
-
-.sidebar-responsive {
-  display: inline !important;
-  position: absolute;
-  /*
-    we want the z-index of the sidebar higher so that
-    the charts are not showing over the sidebar 
-    on small screens
-  */
-  z-index: 12 !important;
-}
-
-/* End Sidebar  */
 
 
 /* Main  */  
@@ -315,7 +239,8 @@
   align-items: center;
   width: 200px;
   height: 80px;
-  color: #124e66;
+  color: beige;
+  background-color: #2a382a;
   text-decoration: none;
   border-radius: 10px;
   font-size: 20px;
@@ -351,69 +276,3 @@
 }*/
 
 
-/*For Friends Page Add friend Pop window*/
-body.active-modal {
-  overflow-y: hidden;
-}
-
-.btn-modal {
-  padding: 10px 20px;
-  display: block;
-  margin: 100px auto 0;
-  font-size: 18px;
-}
-
-.modal, .overlay {
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: fixed;
-  border-radius: 20px;
-}
-
-.overlay {
-  background: rgba(49,49,49,0.8);
-}
-.modal-content {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  line-height: 1.4;
-  background: #124e66;
-  padding: 14px 28px;
-  border-radius: 3px;
-  max-width: 600px;
-  min-width: 300px;
-}
-
-.close-modal {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 5px 7px;
-  color: red;
-}
-
-.input{
-  display: flex;
-  align-items: center;
-  margin: auto;
-  width: 400px;
-  height: 50px;
-  background: #d3d9d4;
-  border-radius: 15px;
-
-  height: 50px;
-  width: 400px;
-  border: none;
-  outline: none;
-  color: black;
-  font-size: 20px;
-}
-
-
-/*End For Friends Page Add friend Pop window*/

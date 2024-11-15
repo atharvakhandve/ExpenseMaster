@@ -1,7 +1,7 @@
 import React from 'react'
 import {BsGrid1X2Fill,BsJustify,BsPersonCircle} from 'react-icons/bs'
 
-import '../Dashboard.css'
+import '../Styles/Sidebar.css'
 import { FaUsers } from 'react-icons/fa';
 import { BrowserRouter, Link } from "react-router-dom";
 

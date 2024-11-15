@@ -10,6 +10,7 @@ const GroupTransactions = require('../models/GroupTransactions');
 const TransactionCategories = require('../models/TransactionCategories');
 
 const userCtrl = {
+
     //Register
     register: asynchandler(async (req, res) => {
         const {username, email, password} = req.body;
@@ -99,6 +100,8 @@ const userCtrl = {
             await User.findByIdAndUpdate(FriendId, { $push: { friends: newFriendship_2._id } });
         }
         res.json({
+            success: true,
+            user: addedFriend,
             message: "Friend added successfully"
         })
 

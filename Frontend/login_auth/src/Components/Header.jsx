@@ -2,7 +2,7 @@ import React from 'react'
 import 
  {BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify}
  from 'react-icons/bs'
-import '../Dashboard.css'
+import '../Styles/Header.css'
 import axios from 'axios'
 import { useEffect,useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -72,7 +72,7 @@ function Header({OpenSidebar}) {
             <BsJustify className='icon' onClick={OpenSidebar}/>
         </div>
         <div className='header-left'>
-            <h1>Hello, {username ? <h1>{username}</h1> : <h1>Login first</h1>}</h1>
+            <h1>Hello, {username}</h1>
         </div>
         <div className='header-right'>
             <BsFillBellFill button className='icon'/>
