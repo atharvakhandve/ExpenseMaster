@@ -43,7 +43,7 @@ const [username, setUsername] = useState(''); // Initialize username state
             <main className='main-container'>
 
                 <div className='main-title'>
-                      <h1>Your Groups</h1>
+                      <h1 className="h1">Your Groups</h1>
                 </div>
                 <div className='main-cards'>
                     <div className='card-inner'>
@@ -74,7 +74,7 @@ const [username, setUsername] = useState(''); // Initialize username state
 
 
                 <div className='main-title'>
-                  <h1>All Groups</h1>
+                  <h1 className="h1">All Groups</h1>
                 </div>
                 <div className='card'>
                     <div className='card-inner'>

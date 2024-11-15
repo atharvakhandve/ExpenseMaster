@@ -3,9 +3,10 @@ import Header from '../Components/Header'
 import Sidebar from '../Components/Siderbar'
 import { useState,useEffect } from 'react'
 import { BrowserRouter, Link } from "react-router-dom";
-import '../Styles/Dashboard.css'
+import '../Styles/PopWindow.css'
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 
@@ -20,12 +21,14 @@ const OpenSidebar = () => {
 const [modal, setModal] = useState(false);
 const toggleModal=()=>{
     setModal(!modal) 
+    console.log("modal: " + modal);
 }
 
 const[email,setEmail] = useState("");
 const [message, setMessage] = useState("");
 const [friend, setFriend] = useState(null);
 const [isModalOpen, setIsModalOpen] = useState(false);
+const [loggedInUserId, setLoggedInUserId] = useState(null);
     
 
 const handleAddFriend = async () =>{
@@ -36,7 +39,9 @@ const handleAddFriend = async () =>{
         return;
     }
     try{
-        const res = await axios.post("",{email,
+        const res = await axios.post("http://localhost:3000/api/user/add-friend",{
+            Friendmail: email,
+            UserId: loggedInUserId
 
         });
         if(res.data.success){
@@ -74,7 +79,7 @@ const [username, setUsername] = useState(''); // Initialize username state
         <Sidebar  openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
     <main className='main-container'>
         <div className='main-title'>
-            <h1>Friends</h1>
+            <h1 className='h1'>Friends</h1>
         </div>
 
         <div className='main-cards'>
@@ -84,7 +89,7 @@ const [username, setUsername] = useState(''); // Initialize username state
                     className='btn'>Add New Friend</button>
                 </div>
         </div>
-
+    {console.log("modal before toggle: " + modal)}
 {modal && (
         <div className="modal">
             <div className="overlay">
@@ -93,8 +98,14 @@ const [username, setUsername] = useState(''); // Initialize username state
                         <input 
                         className='input'
                         type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="Your Friend's Email"
                         />
+                        <button 
+                        onClick={handleAddFriend}
+                        type='submit'
+                        className='friend-btn'>Add friend</button>
                         <button 
                         className='close-modal'
                         onClick={toggleModal}> X </button>
@@ -107,7 +118,7 @@ const [username, setUsername] = useState(''); // Initialize username state
 
 
         <div className='main-title'>
-            <h1>Friends List</h1>
+            <h1 className='h1'>Friends List</h1>
         </div>
 
     </main>
