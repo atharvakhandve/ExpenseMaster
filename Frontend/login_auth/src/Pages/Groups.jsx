@@ -2,7 +2,7 @@ import React from "react";
 import Header from '../Components/Header'
 import Sidebar from '../Components/Siderbar'
 import { useState,useEffect } from 'react'
-import '../Dashboard.css'
+import '../Styles/Dashboard.css'
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 

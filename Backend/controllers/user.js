@@ -9,6 +9,7 @@ const Transactions = require('../models/Transactions');
 const GroupTransactions = require('../models/GroupTransactions');
 const TransactionCategories = require('../models/TransactionCategories');
 const CategorySpends = require('../models/CategorySpends');
+const GroupLedger = require('../models/GroupLedger');
 
 const userCtrl = {
     //Register
@@ -153,18 +154,27 @@ const userCtrl = {
     addTransactionToGroup: asynchandler(async (req, res, next) => {
         const {groupId, userId, members, amount} = req.body;
         const transactionData = [];
-
+        var LedgerData = [];
         for(let key in members){
             let currTransaction = {};
+            currLedger = {}
             currTransaction['includedMember'] = key;
             currTransaction['amount'] = members[key];
             currTransaction['user'] = userId;
             currTransaction['description'] = "Bassi Tickets"
             currTransaction['category'] = "672d5bbe4bf361c92b4557ee"
+            if(key != userId){
+                currLedger['owedby'] = key;
+                currLedger['amount'] = members[key];
+                currLedger['paidby'] = userId;
+                currLedger['group'] = groupId;
+                LedgerData.push(currLedger);
+            }
             transactionData.push(currTransaction);
         }
         //const session = await mongoose.startSession();
         try{
+            const Ledger = await GroupLedger.insertMany(LedgerData);
             const transactions = await Transactions.insertMany(transactionData);
             if(transactions){
                 const transactionIds = transactions.map(transaction => transaction._id)

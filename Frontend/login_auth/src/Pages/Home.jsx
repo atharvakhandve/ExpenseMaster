@@ -1,5 +1,5 @@
 import React from 'react'
-import '../Dashboard.css'
+import '../Styles/Dashboard.css'
 import { PieChart, Pie,Tooltip, Sector, ResponsiveContainer } from 'recharts';
 import 
  { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Legend, LineChart, Line } 
