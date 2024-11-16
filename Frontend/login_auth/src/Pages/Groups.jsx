@@ -36,6 +36,9 @@ const [username, setUsername] = useState(''); // Initialize username state
           navigate('/login');
         }
       }, [navigate]);
+
+     
+
     return(
         <div className="grid-container">
                 <Header OpenSidebar={OpenSidebar}/>
@@ -63,7 +66,11 @@ const [username, setUsername] = useState(''); // Initialize username state
                         type="text"
                         placeholder="Enter Group Name"
                         />
-                        <h4>Add Friends</h4>
+                        <button 
+                        
+                        type='submit'
+                        className='friend-btn'>Create Group</button>
+
                         <button 
                         className='close-modal'
                         onClick={toggleModal}> X </button>
