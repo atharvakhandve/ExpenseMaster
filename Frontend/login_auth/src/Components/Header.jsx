@@ -75,9 +75,7 @@ function Header({OpenSidebar}) {
             <h1>Hello, {username}</h1>
         </div>
         <div className='header-right'>
-            <BsFillBellFill button className='icon'/>
-            <BsFillEnvelopeFill button className='icon'/>
-            <BsPersonCircle button className='icon'/>
+           
         </div>
     </header>
   )
@@ -85,6 +83,3 @@ function Header({OpenSidebar}) {
 
 export default Header
 
-/*{users.map(user=>{users.name})}
-{username ? username : "Loading..."}
-*/
