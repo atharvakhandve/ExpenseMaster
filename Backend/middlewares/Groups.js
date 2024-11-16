@@ -5,9 +5,10 @@ const userCtrl = require("../controllers/user");
 
 const GroupsCtrl = {
     fetchUserGroups: async (req, res, next) => {
+        console.log("user: " +req.body.user);
         const user = new mongoose.Types.ObjectId(req.body.user);
         console.log(user);
-        const userGroups = await UserGroups.findOne({user}).populate("groups");
+        const userGroups = await UserGroups.findOne({user}).populate({path: "groups", populate:{path: "members", select:"username email"}});
         req.body.UserGroups = userGroups.groups;
         next();
     },
@@ -33,8 +34,23 @@ const GroupsCtrl = {
             }).populate({path: "paidby owedby", select: "username"});
             console.log("transactionData: " + transactionData);
             totalAmount = 0;
+            groupwiseAmounts = {}
             for(i in transactionData){
                 //console.log(i);
+                if(groupwiseAmounts.hasOwnProperty(transactionData[i].group)){
+                    if(transactionData[i].paidby._id.equals(user)){
+                        groupwiseAmounts[transactionData[i].group] += transactionData[i].amount;
+                    }else{
+                        groupwiseAmounts[transactionData[i].group] -= transactionData[i].amount;
+                    } 
+                }else{
+                    groupwiseAmounts[transactionData[i].group] = 0;
+                    if(transactionData[i].paidby._id.equals(user)){
+                        groupwiseAmounts[transactionData[i].group] += transactionData[i].amount;
+                    }else{
+                        groupwiseAmounts[transactionData[i].group] -= transactionData[i].amount;
+                    } 
+                }
                 if(transactionData[i].paidby._id.equals(user)){
                     totalAmount += transactionData[i].amount;
                 }else{
@@ -45,6 +61,8 @@ const GroupsCtrl = {
             var response = {}
             response.UserGroups = req.body.UserGroups;
             response.totalAmount = totalAmount;
+            response.groupwiseAmounts = groupwiseAmounts;
+            console.log("groupwiseAmounts: " + groupwiseAmounts);
             res.json({response});
         }catch(e){
             console.log(e);

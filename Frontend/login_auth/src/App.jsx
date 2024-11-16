@@ -7,7 +7,7 @@ import Groups from './Pages/Groups'
 import Friends from './Pages/Friends'
 import Dashboard from './Pages/Dashboard'
 import Home from './Pages/Home'
-
+import Group from './Pages/Group'
 function App() {
   return (
     <BrowserRouter>
@@ -18,16 +18,19 @@ function App() {
 
         <Route path='/home' element={
           <Home/>
-          }/>
+         }/>
         <Route path='/dashboard' element={
           <Dashboard/>
-          }/>
+        }/>
         <Route path='/Groups' element={
           <Groups/>
-          }/>
+        }/>
         <Route path='/Friends' element={
           <Friends/>
-          }/>
+        }/>
+        <Route path='/Group' element={
+          <Group/>
+        }/>
       </Routes>
     </BrowserRouter>
   );
