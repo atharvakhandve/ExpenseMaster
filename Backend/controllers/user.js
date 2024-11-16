@@ -66,7 +66,7 @@ const userCtrl = {
         console.log("userId: " + user);
 
         // Fetch the user by ObjectId and exclude the password field
-        const userFound = await User.findById(user).select("-password");
+        const userFound = await User.findById(user).select("-password").populate({path: "friends", select: "friend", populate: {path: "friend", select:"username email"}});
 
         if (!userFound) {
             return res.status(404).json({ message: "User not found" });
@@ -81,39 +81,47 @@ const userCtrl = {
         res.json({ response });
     }),
     addFriend: asynchandler(async (req, res) => {
-        const {FriendId, Friendemail, UserId} = req.body;
-        console.log("FriendId: " + FriendId)
+        const {Friendemail, UserId, UserName, Email} = req.body;
+        //console.log("FriendId: " + FriendId)
         console.log("Friendemail: " + Friendemail)
         console.log("UserId: " + UserId)
-        const friendExists = await Friends.findOne({friend: FriendId, user: UserId});
+        const friendExists = await Friends.findOne({friendEmail: Friendemail, user: UserId});
         console.log("Friend: " + friendExists);
         if(friendExists){
             throw new Error(`You are already Friends with this person`);
         }else{
+            const friendIsUser = await User.findOne({email: Friendemail})
+            if(!friendIsUser){
+                res.json({message: "This person does not exist. Please check the email id."})
+            }
             const newFriendship = await Friends.create({
                 user: UserId,
-                friend: FriendId
+                friend: friendIsUser.username,
+                friendEmail: Friendemail,
+                friendId: friendIsUser._id
             })
             const newFriendship_2 = await Friends.create({
-                user: FriendId,
-                friend: UserId
+                user: friendIsUser._id,
+                friendId: UserId,
+                friend: UserName,
+                friendEmail: Email
             })
-            await User.findByIdAndUpdate(UserId, { $push: { friends: newFriendship._id } });
-            await User.findByIdAndUpdate(FriendId, { $push: { friends: newFriendship_2._id } });
+            await User.findByIdAndUpdate(UserId, { $push: { friends: newFriendship._id } }).populate("friends");
+            await User.findByIdAndUpdate(friendIsUser._id, { $push: { friends: newFriendship_2._id } });
+            const updatedUser = await User.findById(UserId).populate("friends");
+            res.json({
+                success: true,
+                user: updatedUser,
+                message: "Friend added successfully"
+            })
         }
-        res.json({
-            success: true,
-            user: addedFriend,
-            message: "Friend added successfully"
-        })
-
     }),
     displayFriends: asynchandler(async (req, res) => {
         const {friends} = req.body;
 
         const friendsArray = await Friends.find({
             _id: {$in: friends}
-        }).populate('friend', 'username email');
+        })
 
         console.log("These are the friends: " + friendsArray);
         res.json({friendsArray});
@@ -132,15 +140,17 @@ const userCtrl = {
         res.json(populatedGroup)
     }),
     displayGroup: asynchandler(async (req, res) => {
-        const {groupId} = req.body;
-        const group = await Groups.findById(groupId).populate('admin members', 'username email');
-        const categories = await TransactionCategories.find();
-        console.log(categories);
-        var response = {"Categories": categories, "GroupInfo": group}
-        if(!group){
-            throw new Error("Some Error Occurred");
-        }
-
+        const {groupId} = req.query;
+        const groupTransactions = await GroupTransactions.find({group: groupId})
+        .populate({ path: 'user', select: 'username email' }) // Populate 'user' field from User model
+        .populate({
+          path: 'includedMembers', // Populate 'includedMembers' from IndividualTransactions
+          populate: {
+            path: 'includedMember', // Nested populate: Populate 'includedMember' from User model
+            select: 'username email' // Select fields you need from the User model
+          }
+        });
+        response = {groupTransactions, categories: req.body.categories}
         res.json({response});
     }),
     addMembersToGroup: asynchandler(async (req, res) => {
@@ -155,7 +165,7 @@ const userCtrl = {
         res.json({group});
     }),
     addTransactionToGroup: asynchandler(async (req, res, next) => {
-        const {groupId, userId, members, amount} = req.body;
+        const {description, category, groupId, userId, members, amount} = req.body;
         const transactionData = [];
         var LedgerData = [];
         for(let key in members){
@@ -164,8 +174,8 @@ const userCtrl = {
             currTransaction['includedMember'] = key;
             currTransaction['amount'] = members[key];
             currTransaction['user'] = userId;
-            currTransaction['description'] = "Bassi Tickets"
-            currTransaction['category'] = "672d5bbe4bf361c92b4557ee"
+            currTransaction['description'] = description
+            currTransaction['category'] = category
             if(key != userId){
                 currLedger['owedby'] = key;
                 currLedger['amount'] = members[key];
@@ -186,12 +196,12 @@ const userCtrl = {
                    group: groupId,
                    includedMembers: transactionIds,
                    amount: amount,
-                   description: "Bassi Tickets",
-                   category: "672d5bbe4bf361c92b4557ee"
+                   description: description,
+                   category: category
                 })
                 //await session.commitTransaction();
                 await CategorySpends.findOneAndUpdate(
-                    {user: userId, category: "672d5bbe4bf361c92b4557ee"},
+                    {user: userId, category: category},
                     {$inc: {totalAmountSpent: members[userId]}},
                     {upsert: true}
                 );
